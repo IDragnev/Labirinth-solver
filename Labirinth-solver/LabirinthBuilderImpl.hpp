@@ -63,11 +63,12 @@ namespace IDragnev
 	template <typename ForwardIterator>
 	inline void LabirinthSolver::LabirinthBuilder<ForwardIterator>::buildRows(ForwardIterator first, ForwardIterator last)
 	{
+		auto toCellRow = [this](InputRowRef row) { return this->toCellRow(row); };
 		std::transform(first, last, std::back_inserter(result), toCellRow);
 	}
 
 	template <typename ForwardIterator>
-	auto LabirinthSolver::LabirinthBuilder<ForwardIterator>::toCellRow(InputRowRef row) -> CellRow
+	auto LabirinthSolver::LabirinthBuilder<ForwardIterator>::toCellRow(InputRowRef row) const -> CellRow
 	{
 		auto result = CellRow{};
 		result.reserve(columns);
@@ -85,7 +86,7 @@ namespace IDragnev
 		{
 			for (decltype(columns) col = 0; col < columns; ++col)
 			{
-				connectWithNeighbours(cells[row][col], row, col);
+				connectWithNeighbours(result[row][col], row, col);
 			}
 		}
 	}
@@ -93,18 +94,26 @@ namespace IDragnev
 	template <typename ForwardIterator>
 	void LabirinthSolver::LabirinthBuilder<ForwardIterator>::connectWithNeighbours(Cell& cell, std::size_t row, std::size_t column)
 	{
-		auto west = Edge{ 'W', (column > 0u) ? &cells[row][column - 1u] : nullptr };
-		auto east = Edge{ 'E', (column + 1u < columns) ? &cells[row][column + 1u] : nullptr };
-		auto north = Edge{ 'N', (row > 0u) ? &cells[row - 1u][column] : nullptr };
-		auto south = Edge{ 'S', (row + 1u < rows) ? &cells[row + 1u][column] : nullptr };
+		auto west = Edge{ 'W', (column > 0u) ? &result[row][column - 1u] : nullptr };
+		auto east = Edge{ 'E', (column + 1u < columns) ? &result[row][column + 1u] : nullptr };
+		auto north = Edge{ 'N', (row > 0u) ? &result[row - 1u][column] : nullptr };
+		auto south = Edge{ 'S', (row + 1u < rows) ? &result[row + 1u][column] : nullptr };
 
 		addEdgeIfNotEmpty(cell, west, east, north, south);
 	}
 
 	template <typename ForwardIterator>
 	template <typename... Edges>
-	inline void LabirinthSolver::LabirinthBuilder<ForwardIterator>::addEdgeIfNotEmpty(Cell& cell, Edges&&... edges)
+	void LabirinthSolver::LabirinthBuilder<ForwardIterator>::addEdgeIfNotEmpty(Cell& cell, const Edges&... edges)
 	{
-		(cell.edges.push_back(std::forward<Edges>(edges)), ...);
+		auto insert = [&cell](const auto& edge) 
+		{
+			if (edge.neighbour != nullptr)
+			{
+				cell.edges.push_back(edge);
+			}
+		};
+
+		forEachArg(insert, edges...);
 	}
 }
