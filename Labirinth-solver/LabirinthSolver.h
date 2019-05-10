@@ -2,7 +2,7 @@
 #define __LAB_SOLVER_H_INCLUDED__
 
 #include <vector>
-#include <array>
+#include <memory>
 
 namespace IDragnev
 {
@@ -23,7 +23,7 @@ namespace IDragnev
 		{
 			char symbol;
 			bool isVisited = false;
-			std::array<Edge, MAX_NEIGHBOURS_COUNT> edges;
+			std::vector<Edge> edges{ MAX_NEIGHBOURS_COUNT, Edge{} };
 		};
 
 		using CellRow = std::vector<Cell>;
@@ -54,6 +54,9 @@ namespace IDragnev
 			
 			void connectCells();
 			void connectWithNeighbours(Cell& cell, std::size_t row, std::size_t column);
+
+			template <typename... Edges>
+			void addEdgeIfNotEmpty(Cell& cell, Edges&&... edges);
 
 			auto makeSafeClear() noexcept;
 

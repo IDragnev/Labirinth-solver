@@ -89,4 +89,22 @@ namespace IDragnev
 			}
 		}
 	}
+
+	template <typename ForwardIterator>
+	void LabirinthSolver::LabirinthBuilder<ForwardIterator>::connectWithNeighbours(Cell& cell, std::size_t row, std::size_t column)
+	{
+		auto west = Edge{ 'W', (column > 0u) ? &cells[row][column - 1u] : nullptr };
+		auto east = Edge{ 'E', (column + 1u < columns) ? &cells[row][column + 1u] : nullptr };
+		auto north = Edge{ 'N', (row > 0u) ? &cells[row - 1u][column] : nullptr };
+		auto south = Edge{ 'S', (row + 1u < rows) ? &cells[row + 1u][column] : nullptr };
+
+		addEdgeIfNotEmpty(cell, west, east, north, south);
+	}
+
+	template <typename ForwardIterator>
+	template <typename... Edges>
+	inline void LabirinthSolver::LabirinthBuilder<ForwardIterator>::addEdgeIfNotEmpty(Cell& cell, Edges&&... edges)
+	{
+		(cell.edges.push_back(std::forward<Edges>(edges)), ...);
+	}
 }
