@@ -34,6 +34,7 @@ namespace IDragnev
 
 		using CellRow = std::vector<Cell>;
 		using Labirinth = std::vector<CellRow>;
+		using PathStack = std::stack<char>;
 
 		template <typename ForwardIterator>
 		class LabirinthBuilder
@@ -92,8 +93,6 @@ namespace IDragnev
 
 			return findAllPaths();
 		}
-
-		using PathStack = std::stack<char>;
 
 	private:
 		Result findAllPaths();
