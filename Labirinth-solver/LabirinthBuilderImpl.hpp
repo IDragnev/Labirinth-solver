@@ -17,7 +17,9 @@ namespace IDragnev
 	template <typename ForwardIterator>
 	auto LabirinthSolver::LabirinthBuilder<ForwardIterator>::operator()(ForwardIterator first, ForwardIterator last) -> Labirinth
 	{
-		auto clear = makeSafeClear();
+		using Utility::CallOnDestruction;
+
+		auto x = CallOnDestruction{ [this]() noexcept { clear(); } };
 		init(first, last);
 		buildRows(first, last);
 		connectCells();
@@ -26,16 +28,10 @@ namespace IDragnev
 	}
 
 	template <typename ForwardIterator>
-	auto LabirinthSolver::LabirinthBuilder<ForwardIterator>::makeSafeClear() noexcept
+	void LabirinthSolver::LabirinthBuilder<ForwardIterator>::clear() noexcept
 	{
-		auto deleter = [](auto ptr) noexcept
-		{		
-			ptr->rows = ptr->columns = 0;
-	   		ptr->result.clear();
-		};
-
-		using ScopedClear = std::unique_ptr<LabirinthBuilder, decltype(deleter)>;
-		return ScopedClear{ this, deleter };
+		rows = columns = 0;
+		result.clear();
 	}
 
 	template <typename ForwardIterator>

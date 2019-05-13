@@ -65,7 +65,7 @@ namespace IDragnev
 			template <typename... Edges>
 			void addEdgeIfNotEmpty(Cell& cell, const Edges&... edges);
 
-			auto makeSafeClear() noexcept;
+			void clear() noexcept;
 
 		private:
 			std::size_t rows = 0;
