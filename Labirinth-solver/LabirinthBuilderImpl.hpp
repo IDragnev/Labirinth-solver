@@ -59,15 +59,15 @@ namespace IDragnev
 	template <typename ForwardIterator>
 	inline void LabirinthSolver::LabirinthBuilder<ForwardIterator>::buildRows(ForwardIterator first, ForwardIterator last)
 	{
-		auto toCellRow = [this](InputRowRef row) { return this->toCellRow(row); };
+		auto toCellRow = [size = columns](InputRowRef row) { return buildCellRow(row, size); };
 		std::transform(first, last, std::back_inserter(result), toCellRow);
 	}
 
 	template <typename ForwardIterator>
-	auto LabirinthSolver::LabirinthBuilder<ForwardIterator>::toCellRow(InputRowRef row) const -> CellRow
+	auto LabirinthSolver::LabirinthBuilder<ForwardIterator>::buildCellRow(InputRowRef row, std::size_t size) -> CellRow
 	{
 		auto result = CellRow{};
-		result.reserve(columns);
+		result.reserve(size);
 		auto toCell = [](char symbol) { return Cell{ symbol }; };
 
 		std::transform(std::begin(row), std::end(row), std::back_inserter(result), toCell);

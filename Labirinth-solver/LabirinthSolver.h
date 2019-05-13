@@ -57,7 +57,7 @@ namespace IDragnev
 			void reserveMemory();
 			
 			void buildRows(ForwardIterator first, ForwardIterator last);
-			CellRow toCellRow(InputRowRef row) const;
+			static CellRow buildCellRow(InputRowRef row, std::size_t size);
 			
 			void connectCells();
 			void connectWithNeighbours(Cell& cell, std::size_t row, std::size_t column);
