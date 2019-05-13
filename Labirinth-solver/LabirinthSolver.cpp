@@ -8,7 +8,7 @@ namespace IDragnev
 	{
 	}
 
-	inline LabirinthSolver& LabirinthSolver::operator=(const LabirinthSolver&) noexcept
+	LabirinthSolver& LabirinthSolver::operator=(const LabirinthSolver&) noexcept
 	{
 		return *this;
 	}

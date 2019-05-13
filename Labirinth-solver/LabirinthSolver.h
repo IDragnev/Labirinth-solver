@@ -62,10 +62,10 @@ namespace IDragnev
 			void connectCells();
 			void connectWithNeighbours(Cell& cell, std::size_t row, std::size_t column);
 
-			template <typename... Edges>
-			void addEdgeIfNotEmpty(Cell& cell, const Edges&... edges);
-
 			void clear() noexcept;
+
+			template <typename... Edges>
+			static void addEdgeIfNotEmpty(Cell& cell, const Edges&... edges);
 
 		private:
 			std::size_t rows = 0;
