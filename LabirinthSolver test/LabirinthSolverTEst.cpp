@@ -18,7 +18,7 @@ namespace LabirinthSolvertest
 		TEST_METHOD(noPath)
 		{
 			auto lab = Lab{ "*s*",
-							"**e" };
+                            "**e" };
 
 			auto result = Solver{}(std::begin(lab), std::end(lab));
 
@@ -28,24 +28,24 @@ namespace LabirinthSolvertest
 		TEST_METHOD(trivialPath)
 		{
 			auto lab = Lab{ "s=",
-							"*e" };
+                            "*e" };
 
 			auto result = Solver{}(std::begin(lab), std::end(lab));
 
-			Assert::IsTrue(result == Container{ "ES" });
+			Assert::IsTrue(containsExactly(result, { "ES" }));
 		}
 
 		TEST_METHOD(splitWay)
 		{
 			auto lab = Lab{ "*s*",
-							"*=*",
+                            "*=*",
 			                "===",
 			                "=*=",
-							"=e=" };
+                            "=e=" };
 
 			auto result = Solver{}(std::begin(lab), std::end(lab));
 
-			Assert::IsTrue(contains(result, { "SSESSW", "SSWSSE" }));
+			Assert::IsTrue(containsExactly(result, { "SSESSW", "SSWSSE" }));
 		}
 
 		TEST_METHOD(complex)
@@ -56,13 +56,16 @@ namespace LabirinthSolvertest
 
 			auto result = Solver{}(std::begin(lab), std::end(lab));
 
-			Assert::IsTrue(contains(result, { "ESS", "ESESW", "EESSW", "EESWS" }));
+			Assert::IsTrue(containsExactly(result, { "ESS", "ESESW", "EESSW", "EESWS" }));
 		}
 
 	private:
-		static bool contains(const Container& result, const Container& paths)
+		static bool containsExactly(const Container& result, const Container& paths)
 		{
-			return std::all_of(std::begin(paths), std::end(paths), [&result](const auto& p) { return isMemberOf(result, p); });
+			auto isInResult = [&result](const auto& p) { return isMemberOf(result, p); };
+
+			return result.size() == paths.size() &&
+				   std::all_of(std::begin(paths), std::end(paths), isInResult);
 		}
 
 		static bool isMemberOf(const Container& container, const std::string& p)
