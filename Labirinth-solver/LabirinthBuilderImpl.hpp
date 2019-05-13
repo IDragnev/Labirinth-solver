@@ -78,11 +78,11 @@ namespace IDragnev
 	template <typename ForwardIterator>
 	void LabirinthSolver::LabirinthBuilder<ForwardIterator>::connectCells()
 	{
-		for (decltype(rows) row = 0; row < rows; ++row)
+		for (decltype(rows) i = 0; i < rows; ++i)
 		{
-			for (decltype(columns) col = 0; col < columns; ++col)
+			for (decltype(columns) j = 0; j < columns; ++j)
 			{
-				connectWithNeighbours(result[row][col], row, col);
+				connectWithNeighbours(result[i][j], i, j);
 			}
 		}
 	}
