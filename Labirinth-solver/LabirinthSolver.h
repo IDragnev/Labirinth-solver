@@ -11,7 +11,7 @@ namespace IDragnev
 	template <typename Callable, typename... Args>
 	void forEachArg(Callable f, Args&&... args)
 	{
-		(f(args), ...);
+		(f(std::forward<Args>(args)), ...);
 	}
 
 	class LabirinthSolver
